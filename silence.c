@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <mmsystem.h>
 
+#define samplerate 44100
+
 // Helper function to fill a buffer with silence
 void FillBufferWithSilence(LPSTR buffer, DWORD bufferSize)
 {
@@ -11,7 +13,7 @@ void FillBufferWithSilence(LPSTR buffer, DWORD bufferSize)
     }
 }
 
-int main()
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCommandLine, int cmdShow)
 {
     // Open the default waveform-audio output device
     HWAVEOUT hWaveOut = NULL;
@@ -21,16 +23,16 @@ int main()
     WAVEFORMATEX waveFormat;
     waveFormat.wFormatTag = WAVE_FORMAT_PCM;
     waveFormat.nChannels = 1;
-    waveFormat.nSamplesPerSec = 44100;
-    waveFormat.nAvgBytesPerSec = 44100;
+    waveFormat.nSamplesPerSec = samplerate;
+    waveFormat.nAvgBytesPerSec = samplerate;
     waveFormat.nBlockAlign = 1;
     waveFormat.wBitsPerSample = 8;
     waveFormat.cbSize = 0;
 
     // Set up wave header structure
     WAVEHDR waveHeader;
-    waveHeader.lpData = (char *)malloc(44100);
-    waveHeader.dwBufferLength = 44100;
+    waveHeader.lpData = (char *)malloc(samplerate);
+    waveHeader.dwBufferLength = samplerate;
     waveHeader.dwBytesRecorded = 0;
     waveHeader.dwUser = 0;
     waveHeader.dwFlags = 0;
@@ -41,12 +43,15 @@ int main()
     // Fill the buffer with silence
     FillBufferWithSilence(waveHeader.lpData, waveHeader.dwBufferLength);
 
-    // Prepare and write the wave header
-    waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
-    waveOutWrite(hWaveOut, &waveHeader, sizeof(WAVEHDR));
+    while(1)
+    {
+        // Prepare and write the wave header
+        waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
+        waveOutWrite(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 
-    // Wait for the sound to finish playing
-    Sleep(1000);
+        // Wait for the sound to finish playing
+        Sleep(1000);
+    }
 
     // Clean up
     waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
