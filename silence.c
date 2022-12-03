@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -28,7 +29,7 @@ int main()
 
     // Set up wave header structure
     WAVEHDR waveHeader;
-    waveHeader.lpData = new char[44100];
+    waveHeader.lpData = (char *)malloc(44100);
     waveHeader.dwBufferLength = 44100;
     waveHeader.dwBytesRecorded = 0;
     waveHeader.dwUser = 0;
@@ -50,7 +51,7 @@ int main()
     // Clean up
     waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
     waveOutClose(hWaveOut);
-    delete[] waveHeader.lpData;
+    free(waveHeader.lpData);
 
     return 0;
 }
