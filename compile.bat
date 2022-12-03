@@ -1,0 +1,1 @@
+gcc silence.c -s -static -lwinmm -Wl,-subsystem,windows -o silence.exe
