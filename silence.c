@@ -51,10 +51,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 
 		// Wait for the sound to finish playing
 		Sleep(1000);
+
+		// Unprepare the wave header
+		waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	}
 
 	// Clean up
-	waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	waveOutClose(hWaveOut);
 	free(waveHeader.lpData);
 
