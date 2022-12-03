@@ -9,7 +9,7 @@ void FillBufferWithSilence(LPSTR buffer, DWORD bufferSize)
 {
     for (DWORD i = 0; i < bufferSize; i++)
     {
-        buffer[i] = 0;
+        buffer[i] = 0x80;
     }
 }
 
