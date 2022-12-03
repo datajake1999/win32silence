@@ -15,10 +15,6 @@ void FillBufferWithSilence(LPSTR buffer, DWORD bufferSize)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCommandLine, int cmdShow)
 {
-    // Open the default waveform-audio output device
-    HWAVEOUT hWaveOut = NULL;
-    waveOutOpen(&hWaveOut, WAVE_MAPPER, NULL, 0, 0, 0);
-
     // Set up wave format structure
     WAVEFORMATEX waveFormat;
     waveFormat.wFormatTag = WAVE_FORMAT_PCM;
@@ -42,6 +38,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 
     // Fill the buffer with silence
     FillBufferWithSilence(waveHeader.lpData, waveHeader.dwBufferLength);
+
+    // Open the default waveform-audio output device
+    HWAVEOUT hWaveOut = NULL;
+    waveOutOpen(&hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, 0);
 
     while(1)
     {
