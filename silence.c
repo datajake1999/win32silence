@@ -49,6 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 
 	// Clean up
 	waveOutClose(hWaveOut);
+	hWaveOut = NULL;
 
 	return 0;
 }
