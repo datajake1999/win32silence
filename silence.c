@@ -1,17 +1,7 @@
-#include <stdlib.h>
 #include <windows.h>
 #include <mmsystem.h>
 
 #define samplerate 44100
-
-// Helper function to fill a buffer with silence
-void FillBufferWithSilence(LPSTR buffer, DWORD bufferSize)
-{
-	for (DWORD i = 0; i < bufferSize; i++)
-	{
-		buffer[i] = 0x80;
-	}
-}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCommandLine, int cmdShow)
 {
@@ -20,24 +10,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nChannels = 1;
 	waveFormat.nSamplesPerSec = samplerate;
-	waveFormat.nAvgBytesPerSec = samplerate;
-	waveFormat.nBlockAlign = 1;
-	waveFormat.wBitsPerSample = 8;
+	waveFormat.nAvgBytesPerSec = samplerate*2;
+	waveFormat.nBlockAlign = 2;
+	waveFormat.wBitsPerSample = 16;
 	waveFormat.cbSize = 0;
+
+	// Set up audio buffer
+	WORD samples[samplerate];
+	ZeroMemory(samples, sizeof(samples));
 
 	// Set up wave header structure
 	WAVEHDR waveHeader;
-	waveHeader.lpData = (char *)malloc(samplerate);
-	waveHeader.dwBufferLength = samplerate;
+	waveHeader.lpData = samples;
+	waveHeader.dwBufferLength = sizeof(samples);
 	waveHeader.dwBytesRecorded = 0;
 	waveHeader.dwUser = 0;
 	waveHeader.dwFlags = 0;
 	waveHeader.dwLoops = 0;
 	waveHeader.lpNext = 0;
 	waveHeader.reserved = 0;
-
-	// Fill the buffer with silence
-	FillBufferWithSilence(waveHeader.lpData, waveHeader.dwBufferLength);
 
 	// Open the default waveform-audio output device
 	HWAVEOUT hWaveOut = NULL;
@@ -58,7 +49,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 
 	// Clean up
 	waveOutClose(hWaveOut);
-	free(waveHeader.lpData);
 
 	return 0;
 }
