@@ -5,8 +5,12 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCommandLine, int cmdShow)
 {
-	// Set up wave format structure
 	WAVEFORMATEX waveFormat;
+	WORD samples[samplerate];
+	WAVEHDR waveHeader;
+	HWAVEOUT hWaveOut = NULL;
+
+	// Set up wave format structure
 	ZeroMemory(&waveFormat, sizeof(waveFormat));
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nChannels = 1;
@@ -16,17 +20,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	waveFormat.wBitsPerSample = 16;
 
 	// Set up audio buffer
-	WORD samples[samplerate];
 	ZeroMemory(samples, sizeof(samples));
 
 	// Set up wave header structure
-	WAVEHDR waveHeader;
 	ZeroMemory(&waveHeader, sizeof(waveHeader));
 	waveHeader.lpData = samples;
 	waveHeader.dwBufferLength = sizeof(samples);
 
 	// Open the default waveform-audio output device
-	HWAVEOUT hWaveOut = NULL;
 	waveOutOpen(&hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, 0);
 
 	// Prepare the wave header
