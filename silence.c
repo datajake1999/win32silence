@@ -29,20 +29,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	HWAVEOUT hWaveOut = NULL;
 	waveOutOpen(&hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, 0);
 
+	// Prepare the wave header
+	waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
+
 	while(1)
 	{
-		// Prepare and write the wave header
-		waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
+		// Write audio to device
 		waveOutWrite(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 
 		// Wait for the sound to finish playing
 		Sleep(1000);
-
-		// Unprepare the wave header
-		waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	}
 
 	// Clean up
+	waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	waveOutClose(hWaveOut);
 	hWaveOut = NULL;
 
