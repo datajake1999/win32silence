@@ -9,6 +9,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	WORD samples[samplerate];
 	WAVEHDR waveHeader;
 	HWAVEOUT hWaveOut = NULL;
+	HANDLE hMutex = NULL;
+
+	//Attempt to create the mutex and return if already open
+	hMutex = OpenMutex(MUTEX_ALL_ACCESS, 0, "Win32Silence");
+	if (hMutex)
+	{
+		return 0;
+	}
+	hMutex = CreateMutex(0, 0, "Win32Silence");
 
 	// Set up wave format structure
 	ZeroMemory(&waveFormat, sizeof(waveFormat));
@@ -46,6 +55,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	waveOutClose(hWaveOut);
 	hWaveOut = NULL;
+	ReleaseMutex(hMutex);
+	hMutex = NULL;
 
 	return 0;
 }
