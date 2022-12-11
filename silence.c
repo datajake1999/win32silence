@@ -52,6 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	}
 
 	// Clean up
+	waveOutReset(hWaveOut);
 	waveOutUnprepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
 	waveOutClose(hWaveOut);
 	hWaveOut = NULL;
