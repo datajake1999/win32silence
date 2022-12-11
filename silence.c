@@ -36,8 +36,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszComma
 	waveHeader.lpData = samples;
 	waveHeader.dwBufferLength = sizeof(samples);
 
-	// Open the default waveform-audio output device
+	// Attempt to open the default waveform-audio output device
 	waveOutOpen(&hWaveOut, WAVE_MAPPER, &waveFormat, 0, 0, 0);
+	if (!hWaveOut)
+	{
+		return 0;
+	}
 
 	// Prepare the wave header
 	waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR));
